@@ -26,13 +26,16 @@ module.exports = function(request, response){
 
         if(lib.moment().isAfter(date)) return memo; // 過去の情報は含めない
 
+        var cols = [];
         $cols.eq(val + 1).find('p > span').each(function(i){
           var bookable = !$(this).hasClass('forest') && !$(this).hasClass('reserved');
-          memo.push({
-            date: date.format('MM/DD dddd ') + dayOrNight[i],
+          cols.push({
+            date: date.format('MM/DD dddd '),
+            period: dayOrNight[i],
             bookable: bookable
           });
         });
+        memo.push(cols);
         return memo;
       }, []));
     });
