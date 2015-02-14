@@ -1,0 +1,23 @@
+{
+  "name": "SavageScraper",
+  "version": "0.0.1",
+  "description": "Savage scraping",
+  "scripts": {
+    "start": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cancer/SavageScraper.git"
+  },
+  "author": "cancer",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio-httpcli": "^0.3.0",
+    "lodash": "^3.2.0",
+    "moment": "^2.9.0"
+  },
+  "devDependencies": {
+    "chalk": "^0.5.1",
+    "gulp": "^3.8.11"
+  }
+}
