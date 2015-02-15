@@ -12,6 +12,12 @@ app.get('/union_base/:year/:month',   require('./modules/api/union_base'));
 
 app.get('/battlecity/:year/:month',   require('./modules/api/battlecity'));
 
+// Asobiba
+app.get('/asobiba_itabashi_1f/:year/:month', require('./modules/api/asobiba_itabashi_1f'));
+app.get('/asobiba_itabashi_b1/:year/:month', require('./modules/api/asobiba_itabashi_b1'));
+app.get('/asobiba_yokohama/:year/:month', require('./modules/api/asobiba_yokohama'));
+app.get('/asobiba_akiba/:year/:month', require('./modules/api/asobiba_akiba'));
+
 // Google Calendar
 app.get('/donpachi',     require('./modules/api/donpachi'));
 app.get('/rockhill',     require('./modules/api/rockhill'));
