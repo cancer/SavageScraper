@@ -4,7 +4,8 @@ var fetch = require('../fetch');
 var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
 
-module.exports = function(url){
+module.exports = function(url, opts){
+  opts = opts || {};
   var options = {
     normalizeWhitespace: true,
     decodeEntities: true
@@ -13,7 +14,9 @@ module.exports = function(url){
 
   fetch(url, options).then(($, res) => {
     var reserved = JSON.parse(entities.decode($.html())).feed.entry.map(function(val){
-      return lib.moment(new Date(val.content.$t.match(/開始日: (.*)<br \/>/i)[1])).format('MM/DD dddd');
+      opts.regStr = opts.regStr || '(?:開始日|期間): (.*)(?=<br />| )';
+      var matches = val.content.$t.match(new RegExp(opts.regStr, 'i'))[1];
+      return lib.moment(new Date(matches)).format('MM/DD dddd');
     });
     var weekEndIndex = [1, 6];
     var weekEnd = [];
