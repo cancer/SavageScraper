@@ -64,24 +64,6 @@ module.exports = function(request, response){
               }
             }
           });
-          //var sunday_num = $cols_day.eq(idx_sunday).text().trim();
-          //var sunday_detail = $cols_detail.eq(idx_sunday).text().trim();
-          //var saturday_num = $cols_day.eq(idx_saturday).text().trim();
-          //var saturday_detail = $cols_detail.eq(idx_saturday).text().trim();
-          //if (sunday_num) {
-          //  result.holiday.push({
-          //    date: lib.moment([ year, month, sunday_num ]).format('MM/DD dddd'),
-          //    summary: sunday_detail,
-          //    bookable: _isBookable(sunday_detail)
-          //  });
-          //}
-          //if (saturday_num) {
-          //  result.holiday.push({
-          //    date: lib.moment([ year, month, saturday_num ]).format('MM/DD dddd'),
-          //    summary: saturday_detail,
-          //    bookable: _isBookable(saturday_detail)
-          //  });
-          //}
         }
         return false;
       }
