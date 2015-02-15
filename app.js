@@ -10,6 +10,8 @@ app.get('/forest_union/:year/:month', require('./modules/api/forest_union'));
 app.get('/u_box/:year/:month',        require('./modules/api/u_box'));
 app.get('/union_base/:year/:month',   require('./modules/api/union_base'));
 
+app.get('/battlecity/:year/:month',   require('./modules/api/battlecity'));
+
 // Google Calendar
 app.get('/donpachi',     require('./modules/api/donpachi'));
 app.get('/rockhill',     require('./modules/api/rockhill'));
