@@ -3,7 +3,10 @@
 var parseUnionTraditional = require('../parser/union_traditional');
 
 module.exports = function(request, response){
-  parseUnionTraditional('6').then((result) => {
+  var opts = {
+    params: request.params
+  };
+  parseUnionTraditional('6', opts).then((result) => {
     response.send(result);
   }).catch((error) => {
     response.send(error);
