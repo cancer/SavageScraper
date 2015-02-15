@@ -1,6 +1,6 @@
 'use strict';
 
-var lib = require('./_lib');
+var lib = require('../_lib');
 
 module.exports = function(request, response){
   var weekEndIndexes = {
