@@ -1,22 +1,21 @@
 'use strict';
 
 var lib = require('../_lib');
+var calendar = require('../calendar');
 
-module.exports = function(id, opts){
+module.exports = (id, opts) => {
   var options = {
     normalizeWhitespace: true,
     ID: id
   };
-  var deferred = Promise.defer();
-  var dateSpan = null;
   opts.params = opts.params || {};
-  if(opts.params.month === undefined){
-    opts.params.year = opts.params.year || lib.moment().get('year');
-    opts.params.month = lib.moment().get('month');
-  }
-  dateSpan = lib.moment([opts.params.year, opts.params.month - 1]).format('YYYY-MM');
+  opts.params.year = opts.params.year || lib.moment().get('year');
+  opts.params.month = opts.params.month || lib.moment().get('month');
 
-  lib.client.fetch('http://www.musa-web.net/union/index.cfm', options)
+  var deferred = Promise.defer();
+  var dateSpan = lib.moment([opts.params.year, opts.params.month - 1]).format('YYYY-MM');
+  var url = 'http://www.musa-web.net/union/index.cfm';
+  lib.client.fetch(url, options)
     .then((result) => {
       return result.$('form[name=form01]').submit({
         p_mode: 'GONEXT',
@@ -26,32 +25,19 @@ module.exports = function(id, opts){
     })
     .then((result) => {
       var $ = result.$;
-      var weekEndIndex = [0, 6];
-      var dayOrNight = ['Day', 'Night'];
-      var results = [];
-      $('.dataTable').find('tr').each(function(idx){
-        if(idx === 0) return; // 見出し行
+      var $rows = $('.dataTable').find('tr');
+      var field = $rows.eq(1).find('td.hour > p').text().trim().split("\r\n").map(lib._.trim);
 
-        var $cols = $(this).find('td');
-        results.push(weekEndIndex.reduce(function(memo, val){
-          var cellIdx = val + 1;
-          var dayOfMonth = ((idx - 1) * 7) + cellIdx;
-          var date = lib.moment(dateSpan).date(dayOfMonth);
-
-          var cols = [];
-          $cols.eq(val + 1).find('p > span').each(function(i){
-            var bookable = !$(this).hasClass('forest') && !$(this).hasClass('reserved');
-            cols.push({
-              date: date.format('MM/DD dddd '),
-              period: dayOrNight[i],
-              bookable: bookable,
-              summary: $(this).text().trim()
-            });
-          });
-          memo.push(cols);
-          return memo;
-        }, []));
-      });
+      var results = calendar.getWeekEnds(dateSpan).reduce((result, val, idx) => {
+        var date = val.date.format('MM/DD dd');
+        // 0行目は見出し行なのでずらす
+        // 0列目は見出し行なのでずらす
+        var $col = $rows.eq(val.week + 1).find('td').eq(val.day + 1);
+        result.push(parseColumn($col, field, $).map((obj) => {
+          return lib._.extend({ date: date }, obj);
+        }));
+        return result;
+      }, []);
 
       deferred.resolve(lib._.flatten(results));
     })
@@ -65,4 +51,23 @@ module.exports = function(id, opts){
 
   return deferred.promise;
 };
+
+function parseColumn($col, field, $){
+  var res = [];
+  $col.find('p > span').each((i) => {
+    var $this = $(this);
+    res.push({
+      field: field[i],
+      bookable: isBookable($this),
+      summary: $this.text().trim()
+    });
+  });
+  return res;
+}
+
+function isBookable($target){
+  var isFieldEvent = $target.hasClass('forest');
+  var isReserved = $target.hasClass('reserved');
+  return !isFieldEvent && !isReserved;
+}
 
