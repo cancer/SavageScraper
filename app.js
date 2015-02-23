@@ -18,6 +18,8 @@ app.get('/asobiba_itabashi_b1/:year/:month', require('./modules/api/asobiba_itab
 app.get('/asobiba_yokohama/:year/:month', require('./modules/api/asobiba_yokohama'));
 app.get('/asobiba_akiba/:year/:month', require('./modules/api/asobiba_akiba'));
 
+app.get('/cimax/:year/:month', require('./modules/api/cimax'));
+
 // Google Calendar
 app.get('/donpachi',     require('./modules/api/donpachi'));
 app.get('/rockhill',     require('./modules/api/rockhill'));
