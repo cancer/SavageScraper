@@ -73,13 +73,13 @@ module.exports = function(request, response){
   function _isBookable (detail) {
     var bookable = {
       day: true,
-      night:true 
+      night:true
     };
-    if ( /貸切受付NG/.test(detail) ) {
+    if (/貸切受付NG/.test(detail)) {
       bookable.day = false;
       bookable.night = false;
     }
-    if ( /BBQ定例会/.test(detail) ) {
+    if (/BBQ定例会/.test(detail)) {
       bookable.day = false;
       bookable.night = false;
     }
