@@ -74,7 +74,7 @@ module.exports = function(request, response){
         night: true
       }
     };
-    if (/[MＭ][FＦ](貸切||平日交流会)/.test(detail) ) {
+    if (/[MＭ][FＦ](貸切||平日交流会)/.test(detail)) {
       bookable.mf = false;
     }
     if (/[CＣ][FＦ]貸切/.test(detail)) {
@@ -84,7 +84,7 @@ module.exports = function(request, response){
       bookable.mf = false;
       bookable.cf = false;
     }
-    var midMatch = /[MＭ][IＩ][DＤ](.+)?貸切/.exec(detail)
+    var midMatch = /[MＭ][IＩ][DＤ](.+)?貸切/.exec(detail);
     if (midMatch) {
       if (!midMatch[1]) {
         bookable.mid.day = false;
