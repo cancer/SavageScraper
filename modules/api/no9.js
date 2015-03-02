@@ -25,7 +25,7 @@ module.exports = function(request, response){
     var idx_saturday = 6;
 
     //曜日行を削除する
-    $tables.find('tr:first-child').remove();
+    $tables.find('tr[bgcolor="#FEF2BA"]').remove();
 
     $tables.each((idx, table) => {
       var $table = $(table);
@@ -36,6 +36,22 @@ module.exports = function(request, response){
         var $cols = $row.find('td');
         $cols.each((idx, col) => {
           var $col = $(col);
+          //日付の削除
+          var $day = $col.find('b').remove();
+          var day = $day.text().trim();
+          var item = {};
+
+          if (day) {
+            item = {
+              date: lib.moment([ request.params.year, request.params.month, day ]).format('MM/DD dddd'),
+              summary: $col.text(),
+              bookable: _isBookable($col.text())
+            };
+            result.all.push(item);
+            if (idx === idx_sunday || idx === idx_saturday) {
+              result.holiday.push(item)
+            }
+          }
         });
       });
 
@@ -53,8 +69,34 @@ module.exports = function(request, response){
       mf: true,
       cf: true,
       bf: true,
-      mid: true
+      mid: {
+        day: true,
+        night: true
+      }
     };
+    if (/[MＭ][FＦ](貸切||平日交流会)/.test(detail) ) {
+      bookable.mf = false;
+    }
+    if (/[CＣ][FＦ]貸切/.test(detail)) {
+      bookable.cf = false;
+    }
+    if (/[TＴ][WＷ][FＦ].+貸切/.test(detail)) {
+      bookable.mf = false;
+      bookable.cf = false;
+    }
+    var midMatch = /[MＭ][IＩ][DＤ](.+)?貸切/.exec(detail)
+    if (midMatch) {
+      if (!midMatch[1]) {
+        bookable.mid.day = false;
+        bookable.mid.night = false;
+      }
+      if (midMatch[1] == '午前') {
+        bookable.mid.day = false;
+      }
+      if (midMatch[1] == '午後') {
+        bookable.mid.night = false;
+      }
+    }
     return bookable;
   };
 
