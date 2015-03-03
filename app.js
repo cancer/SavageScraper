@@ -4,6 +4,9 @@ var express = require('express');
 var app = module.exports =  express();
 app.use(express.static(__dirname + '/static'));
 
+// XXX: test
+app.get('/test', require('./modules/api/_cimax'));
+
 // Union traditional
 app.get('/desert_union/:year/:month', require('./modules/api/desert_union'));
 app.get('/forest_union/:year/:month', require('./modules/api/forest_union'));
