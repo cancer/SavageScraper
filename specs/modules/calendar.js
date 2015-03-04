@@ -6,11 +6,10 @@ describe('calendar', () => {
     var date = new Date('2015/3/3');
 
     it('should return calendared object', () => {
-      var obj = calendar.getCalendarObj();
-      console.log(obj)
+      var obj = calendar.getCalendarObj(date);
       assert(obj.year === 2015);
       assert(obj.week === 10);
-      assert(obj.day === 3);
+      assert(obj.day === 2);
     });
   });
 });

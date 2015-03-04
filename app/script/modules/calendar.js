@@ -62,4 +62,3 @@ calendar.getWeekEnds = (month) => {
 };
 
 module.exports = calendar;
-
