@@ -2,9 +2,15 @@ var gulp = require('gulp');
 var spawn = require('child_process').spawn;
 var chalk = require('chalk');
 var server = require('gulp-express');
+var mocha = require('gulp-mocha');
+var espower = require('gulp-espower');
 var service = null;
 
-gulp.task('exec', function(){
+var specPath = 'specs/**/*.js';
+var poweredPath = 'powered/**/*.js';
+var poweredDest = 'powered/';
+
+function startServer(){
   if(service) {
     service.kill('SIGKILL');
     service = undefined;
@@ -27,11 +33,24 @@ gulp.task('exec', function(){
   function onProcessExit(){
     service.kill();
   }
+}
+
+gulp.task('power-assert', function(){
+  console.log(1)
+  return gulp.src(specPath)
+    .pipe(gulp.dest(poweredDest));
 });
 
-gulp.task('watch', function(){
-  gulp.watch('app.js', ['exec']);
-  gulp.watch('modules/**/*.js', ['exec']);
+gulp.task('test', ['power-assert'], function(){
+  return gulp.src(poweredPath)
+    .pipe(mocha());
 });
 
-gulp.task('default', ['exec', 'watch']);
+gulp.task('server', function(cb){
+  gulp.watch('app.js', startServer);
+  gulp.watch('modules/**/*.js', startServer);
+
+  startServer(cb);
+});
+
+gulp.task('default', ['server']);
