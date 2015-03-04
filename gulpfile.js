@@ -44,12 +44,15 @@ function startServer(){
 gulp.task('power-assert', function(){
   console.log(1)
   return gulp.src(specPath)
+    .pipe(babel())
     .pipe(gulp.dest(poweredDest));
 });
 
-gulp.task('test', ['power-assert'], function(){
+gulp.task('test', ['build', 'power-assert'], function(){
   return gulp.src(poweredPath)
-    .pipe(mocha());
+    .pipe(mocha({
+      reporter: 'nyan'
+    }));
 });
 
 gulp.task('clean', function(cb){
