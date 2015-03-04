@@ -20,6 +20,12 @@ app.get('/asobiba_akiba/:year/:month', require('./modules/api/asobiba_akiba'));
 
 app.get('/cimax/:year/:month', require('./modules/api/cimax'));
 
+app.get('/raid/:year/:month', require('./modules/api/raid'));
+
+app.get('/no9/:year/:month', require('./modules/api/no9'));
+
+app.get('/tokku/:year/:month', require('./modules/api/tokku'));
+
 // Google Calendar
 app.get('/donpachi',     require('./modules/api/donpachi'));
 app.get('/rockhill',     require('./modules/api/rockhill'));
