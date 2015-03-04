@@ -5,13 +5,18 @@ var spawn = require('child_process').spawn;
 var chalk = require('chalk');
 var server = require('gulp-express');
 var babel = require('gulp-babel');
+var mocha = require('gulp-mocha');
+var espower = require('gulp-espower');
 var service = null;
 
 var docroot = path.resolve(__dirname, '/dist');
 var scriptsPaths = ['app/script/**/*.js'];
 var staticPaths = ['app/static/**/*'];
+var specPath = 'specs/**/*.js';
+var poweredPath = 'powered/**/*.js';
+var poweredDest = 'powered/';
 
-gulp.task('exec', function(){
+function startServer(){
   if(service) {
     service.kill('SIGKILL');
     service = undefined;
@@ -34,6 +39,20 @@ gulp.task('exec', function(){
   function onProcessExit(){
     service.kill();
   }
+}
+
+gulp.task('power-assert', function(){
+  console.log(1)
+  return gulp.src(specPath)
+    .pipe(babel())
+    .pipe(gulp.dest(poweredDest));
+});
+
+gulp.task('test', ['build', 'power-assert'], function(){
+  return gulp.src(poweredPath)
+    .pipe(mocha({
+      reporter: 'nyan'
+    }));
 });
 
 gulp.task('clean', function(cb){
@@ -53,9 +72,11 @@ gulp.task('static', function() {
 
 gulp.task('build', ['clean', 'scripts', 'static']);
 
-gulp.task('watch', function(){
-  gulp.watch('app/script/**/*.js', ['scripts', 'exec']);
-  gulp.watch('app/static/**/*', ['static', 'exec']);
+gulp.task('server', function(cb){
+  gulp.watch('app/script/**/*.js', ['scripts', startServer]);
+  gulp.watch('app/static/**/*', ['static', startServer]);
+
+  startServer(cb);
 });
 
-gulp.task('default', ['build', 'exec', 'watch']);
+gulp.task('default', ['build', 'server']);
