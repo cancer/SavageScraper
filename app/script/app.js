@@ -26,6 +26,8 @@ app.get('/no9/:year/:month', require('./modules/api/no9'));
 
 app.get('/tokku/:year/:month', require('./modules/api/tokku'));
 
+app.get('/village2/:year/:month', require('./modules/api/village2'));
+
 // Google Calendar
 app.get('/donpachi',     require('./modules/api/donpachi'));
 app.get('/rockhill',     require('./modules/api/rockhill'));
