@@ -42,9 +42,9 @@ function startServer(){
 }
 
 gulp.task('power-assert', function(){
-  console.log(1)
   return gulp.src(specPath)
     .pipe(babel())
+    .pipe(espower())
     .pipe(gulp.dest(poweredDest));
 });
 
