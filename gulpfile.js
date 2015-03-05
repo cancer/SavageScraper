@@ -73,8 +73,14 @@ gulp.task('static', function() {
 gulp.task('build', ['clean', 'scripts', 'static']);
 
 gulp.task('server', function(cb){
-  gulp.watch('app/script/**/*.js', ['scripts', startServer]);
-  gulp.watch('app/static/**/*', ['static', startServer]);
+  gulp.watch('app/script/**/*.js', function(){
+    gulp.run('scripts');
+    startServer(cb);
+  });
+  gulp.watch('app/static/**/*', function(){
+    gulp.run('static');
+    startServer(cb);
+  });
 
   startServer(cb);
 });
