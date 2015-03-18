@@ -3,13 +3,14 @@ var lib = require('../_lib');
 var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
 
-module.exports = function(url, opts){
+module.exports = function(account, opts){
   opts = opts || {};
   var options = {
     normalizeWhitespace: true,
     decodeEntities: true
   };
   var deferred = Promise.defer();
+  var url = 'https://www.google.com/calendar/feeds/'+account+'/public/basic?alt=json';
 
   lib.client.fetch(url, options).then((result) => {
     var $ = result.$;
