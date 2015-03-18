@@ -3,9 +3,8 @@ describe('calendar', () => {
   var calendar = require('../../dist/modules/calendar.js');
 
   describe('getCalendarObj', () => {
-    var date = new Date('2015/3/3');
-
-    it('should return calendared object', () => {
+    it('should return calendared object of 2015/3/3', () => {
+      var date = new Date('2015/3/3');
       var obj = calendar.getCalendarObj(date);
       assert(obj.year === 2015);
       assert(obj.week === 10);
