@@ -10,13 +10,14 @@ module.exports = function(account, opts){
     decodeEntities: true
   };
   var deferred = Promise.defer();
-  var url = 'https://www.google.com/calendar/feeds/'+account+'/public/basic?alt=json';
+  //最大取得件数200件、開始順、昇順
+  var url = 'https://www.google.com/calendar/feeds/'+account+'/public/basic?alt=json&max-results=200&orderby=starttime&sortorder=ascend';
 
   lib.client.fetch(url, options).then((result) => {
     var $ = result.$;
     var json = JSON.parse(entities.decode($.html()));
     var reserved = json.feed.entry.map(function(val){
-      opts.regStr = opts.regStr || '(?:開始日|期間): (.*)(?=<br />| )';
+      opts.regStr = opts.regStr || '(?:開始日|期間):\\s(.+)?\\s?\\(';
       var matches = val.content.$t.match(new RegExp(opts.regStr, 'i'))[1];
       return lib.moment(new Date(matches)).format('MM/DD dddd');
     });
@@ -29,7 +30,9 @@ module.exports = function(account, opts){
       weekEnd.push(lib.moment().date(d).format('MM/DD dddd'));
     }
     deferred.resolve(weekEnd.map(function(val){
-      var bookable = lib._.contains(reserved, val);
+      //Googleカレンダーに入っている予定の中に
+      //今月の土日の予定が入っていなければ予約できる
+      var bookable = !lib._.contains(reserved, val);
       return {
         date: val,
         period: 'Day',
