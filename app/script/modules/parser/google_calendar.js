@@ -10,7 +10,8 @@ module.exports = function(account, opts){
     decodeEntities: true
   };
   var deferred = Promise.defer();
-  var url = 'https://www.google.com/calendar/feeds/'+account+'/public/basic?alt=json';
+  //最大取得件数200件、開始順、昇順
+  var url = 'https://www.google.com/calendar/feeds/'+account+'/public/basic?alt=json&max-results=200&orderby=starttime&sortorder=ascend';
 
   lib.client.fetch(url, options).then((result) => {
     var $ = result.$;
