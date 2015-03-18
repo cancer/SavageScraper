@@ -35,6 +35,7 @@ app.get('/qoolong',      require('./modules/api/qoolong'));
 app.get('/whitebase',    require('./modules/api/whitebase'));
 app.get('/trigger_talk', require('./modules/api/trigger_talk'));
 app.get('/code7', require('./modules/api/code7'));
+app.get('/estate', require('./modules/api/estate'));
 
 app.listen(3000);
 console.log('SavageScraper started on port 3000');
