@@ -39,6 +39,7 @@ calendar.getWeekEnds = (month) => {
         return memo;
       }
       var ret = {
+        year: cal.year,
         date: date,
         week: i,
         isoDay: day,
@@ -53,7 +54,7 @@ calendar.getWeekEnds = (month) => {
 
     result.push(lib._.filter(res, (val) => { return !val.omit }));
 
-    // 月が変わると配列の数が足りなくなるのでループ終了
+    // 配列の数が2未満になったら月が変わったとみなす
     if(res.length < 2) break;
     i++;
   }
