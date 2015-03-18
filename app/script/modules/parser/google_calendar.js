@@ -1,6 +1,5 @@
 'use strict';
 var lib = require('../_lib');
-var fetch = require('../fetch');
 var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
 
@@ -12,8 +11,10 @@ module.exports = function(url, opts){
   };
   var deferred = Promise.defer();
 
-  fetch(url, options).then(($, res) => {
-    var reserved = JSON.parse(entities.decode($.html())).feed.entry.map(function(val){
+  lib.client.fetch(url, options).then((result) => {
+    var $ = result.$;
+    var json = JSON.parse(entities.decode($.html()));
+    var reserved = json.feed.entry.map(function(val){
       opts.regStr = opts.regStr || '(?:開始日|期間): (.*)(?=<br />| )';
       var matches = val.content.$t.match(new RegExp(opts.regStr, 'i'))[1];
       return lib.moment(new Date(matches)).format('MM/DD dddd');
