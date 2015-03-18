@@ -30,7 +30,9 @@ module.exports = function(account, opts){
       weekEnd.push(lib.moment().date(d).format('MM/DD dddd'));
     }
     deferred.resolve(weekEnd.map(function(val){
-      var bookable = lib._.contains(reserved, val);
+      //Googleカレンダーに入っている予定の中に
+      //今月の土日の予定が入っていなければ予約できる
+      var bookable = !lib._.contains(reserved, val);
       return {
         date: val,
         period: 'Day',
