@@ -1,6 +1,5 @@
 'use strict';
 var lib = require('../_lib');
-var fetch = require('../fetch');
 var Entities = require('html-entities').AllHtmlEntities;
 var entities = new Entities();
 
