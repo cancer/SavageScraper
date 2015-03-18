@@ -17,7 +17,7 @@ module.exports = function(account, opts){
     var $ = result.$;
     var json = JSON.parse(entities.decode($.html()));
     var reserved = json.feed.entry.map(function(val){
-      opts.regStr = opts.regStr || '(?:開始日|期間): (.*)(?=<br />| )';
+      opts.regStr = opts.regStr || '(?:開始日|期間):\\s(.+)?\\s?\\(';
       var matches = val.content.$t.match(new RegExp(opts.regStr, 'i'))[1];
       return lib.moment(new Date(matches)).format('MM/DD dddd');
     });
