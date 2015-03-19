@@ -13,6 +13,9 @@ cimax.fetch = () => {
   return lib.client.fetch(url, options);
 };
 
+//
+// CIMAXの表を成形する
+//
 cimax.getRows = ($, args) => {
   var availableMonths = $('.cal_month').text().replace(/(\d{4})年(\d+)月/g, '$1/$2').split(' ');
   var tableIndex = availableMonths.indexOf(args.year + '/' + args.month);
@@ -39,32 +42,34 @@ cimax.getRows = ($, args) => {
   return $table.find('tr');
 };
 
+//
+// CIMAXのセルをパースする
+//
 cimax.parse = function($, $col){
   //HTMLの整形
   var detail = $col.html()
     .replace(/[\n\r]/g,'')
     .replace(/<br>/g,'')
-    .replace(/\<img src=\"img\/(.+?)\.gif\".*?\>/g, () => {
-      switch (arguments[1]) {
+    .replace(/\<img src=\"img\/(.+?)\.gif\".*?\>/g, (str, match) => {
+      switch (match) {
         case 'icon_a' : return 'Aフィールド' ; break;
         case 'icon_b' : return '<,>Bフィールド' ; break;
         case 'icon_c' : return '<,>Cフィールド' ; break;
+        case 'teireikai_c': return '<,>C定例会' ; break;
         default : return '定例会';
       }
     });
 
   return detail.split('<,>').reduce((res, field, idx) => {
-    //定例会であればAB不可
-    var SCHEDULED = '定例会';
-    if(field.indexOf(SCHEDULED) !== -1) {
-      ['A', 'B'].forEach((v) => {
+    var scheduled = cimax.checkScheduled(field);
+    if(scheduled.length > 0) {
+      scheduled.forEach((name) => {
         res.push({
-          field: v,
+          field: name,
           bookable: false,
-          summary: SCHEDULED
+          summary: '定例会'
         });
       });
-      return res;
     }
 
     var _match = field.match(/([ABC])フィールド(.*)/);
@@ -86,10 +91,31 @@ cimax.parse = function($, $col){
     res.push({
       field: fieldName,
       bookable: groupName === '',
-      summary: groupName || '予約可'
+      summary: entities.decode(groupName) || '予約可'
     });
     return res;
   }, []);
+};
+
+//
+// 定例会が入ってるかどうかを調べてフィールドの配列を返す
+//
+cimax.checkScheduled = (field) => {
+  // 通常の定例会であればAB不可
+  var SCHEDULED = '定例会';
+  // HARD MODE定例会であればC不可
+  var SCHEDULED_C = 'C定例会';
+  var schedule = [];
+
+  if(field.indexOf(SCHEDULED_C) !== -1) {
+    schedule.push(['C']);
+  }
+
+  if(field.indexOf(SCHEDULED) !== -1) {
+    schedule.push(['A', 'B']);
+  }
+
+  return lib._.flatten(schedule);
 };
 
 module.exports = cimax;
