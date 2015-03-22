@@ -6,3 +6,35 @@
     status: 200
     file: json/_get.json
 
+-
+  request:
+    url: /api/fields/
+    method: GET
+  response:
+    status: 200
+    file: json/fields/_get.json
+
+-
+  request:
+    url: /api/fields/:year/:month
+    method: GET
+  response:
+    status: 200
+    file: json/fields/_get_201503.json
+
+-
+  request:
+    url: /api/field/:field
+    method: GET
+  response:
+    status: 200
+    file: json/field/_get_field.json
+
+-
+  request:
+    url: /api/field/:field/:year/:month
+    method: GET
+  response:
+    status: 200
+    file: json/field/_get_field_201503.json
+
