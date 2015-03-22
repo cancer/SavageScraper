@@ -20,9 +20,9 @@ calendar.getCalendarObj = (date) => {
 /*
  * calendar.getDaysOfWeek('2015/4' || new Date('2015/4') || moment('2015/4'));
  * // [ { date: moment('2015/4/4'),  week: 0, day: 6 },
- * //   { date: moment('2015/4/5'),  week: 0, day: 7 }
+ * //   { date: moment('2015/4/5'),  week: 0, day: 0 }
  * //   :
- * //   { date: moment('2015/4/26'), week: 3, day: 7 } ]
+ * //   { date: moment('2015/4/26'), week: 3, day: 0 } ]
  */
 calendar.getWeekEnds = (month) => {
   month = moment(month);
@@ -39,10 +39,12 @@ calendar.getWeekEnds = (month) => {
         return memo;
       }
       var ret = {
+        year: cal.year,
         date: date,
-        week: i,
+        week: day === 7 ? i + 1 : i,
+        day: day === 7 ? 0 : day,
+        isoWeek: i,
         isoDay: day,
-        day: day === 7 ? 0 : day
       };
 
       // 月初に先月末が含まれてしまうので除外する
@@ -53,12 +55,20 @@ calendar.getWeekEnds = (month) => {
 
     result.push(lib._.filter(res, (val) => { return !val.omit }));
 
-    // 月が変わると配列の数が足りなくなるのでループ終了
+    // 配列の数が2未満になったら月が変わったとみなす
     if(res.length < 2) break;
     i++;
   }
 
-  return lib._.flatten(result);
+  result = lib._.flatten(result);
+  // 日曜から始まる月は全体的に1週戻す
+  if(cal.day === 7) {
+    result.forEach((v, i, org) => {
+      org[i].week = v.week - 1;
+    });
+  }
+
+  return result;
 };
 
 module.exports = calendar;
