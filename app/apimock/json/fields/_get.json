@@ -2,45 +2,31 @@
   "contents": [
     {
       "name": "デザートユニオン",
-      "name_en": "desert_union",
-      "area": ["Aフィールド", "Bフィールド"],
-      "location": "千葉県印西市平賀2853"
+      "name_en": "desert_union"
     },
     {
       "name": "フォレストユニオン",
-      "name_en": "forest_union",
-      "area": ["Aフィールド", "Bフィールド"],
-      "location": "千葉県印西市平賀2470"
+      "name_en": "forest_union"
     },
     {
       "name": "バトルシティ",
-      "name_en": "battlecity",
-      "area": ["Aフィールド", "Bフィールド"],
-      "location": "千葉県佐倉市 上別所377番1"
+      "name_en": "battlecity"
     },
     {
       "name": "どんぱち",
-      "name_en": "donpachi",
-      "area": [],
-      "location": "千葉県八街市八街は43-15"
+      "name_en": "donpachi"
     },
     {
       "name": "No.9",
-      "name_en": "no9",
-      "area": ["MF", "CF", "BF", "HV", "MID"],
-      "location": "千葉県印西市岩戸2506-1"
+      "name_en": "no9"
     },
     {
       "name": "RAID",
-      "name_en": "raid",
-      "area": [],
-      "location": "千葉県印西市高西新田160番地"
+      "name_en": "raid"
     },
     {
       "name": "Rock Hill",
-      "name_en": "rockhill",
-      "area": ["Aフィールド", "Bフィールド"],
-      "location": "千葉県白井市十余一60"
+      "name_en": "rockhill"
     }
   ]
 }

@@ -1,0 +1,90 @@
+{
+  "contents": {
+    "name": "デザートユニオン",
+    "name_en": "desert_union",
+    "location": "千葉県印西市平賀2853",
+    "area": ["Aフィールド", "Bフィールド"],
+    "reservation": [
+      {
+        "date": "2015/3/7",
+        "area": "Aフィールド",
+        "reserved": ""
+      },
+      {
+        "date": "2015/3/7",
+        "area": "Bフィールド",
+        "reserved": ""
+      },
+      {
+        "date": "2015/3/8",
+        "area": "Aフィールド",
+        "reserved": "定例会"
+      },
+      {
+        "date": "2015/3/8",
+        "area": "Bフィールド",
+        "reserved": "定例会"
+      },
+      {
+        "date": "2015/3/14",
+        "area": "Aフィールド",
+        "reserved": "xyz様"
+      },
+      {
+        "date": "2015/3/14",
+        "area": "Bフィールド",
+        "reserved": ""
+      },
+      {
+        "date": "2015/3/15",
+        "area": "Aフィールド",
+        "reserved": ""
+      },
+      {
+        "date": "2015/3/15",
+        "area": "Bフィールド",
+        "reserved": ""
+      },
+      {
+        "date": "2015/3/21",
+        "area": "Aフィールド",
+        "reserved": "定例会"
+      },
+      {
+        "date": "2015/3/21",
+        "area": "Bフィールド",
+        "reserved": "abc様"
+      },
+      {
+        "date": "2015/3/22",
+        "area": "Aフィールド",
+        "reserved": "abc様"
+      },
+      {
+        "date": "2015/3/22",
+        "area": "Bフィールド",
+        "reserved": "def様"
+      },
+      {
+        "date": "2015/3/28",
+        "area": "Aフィールド",
+        "reserved": ""
+      },
+      {
+        "date": "2015/3/28",
+        "area": "Bフィールド",
+        "reserved": ""
+      },
+      {
+        "date": "2015/3/29",
+        "area": "Aフィールド",
+        "reserved": "定例会"
+      },
+      {
+        "date": "2015/3/29",
+        "area": "Bフィールド",
+        "reserved": ""
+      }
+    ]
+  }
+}
