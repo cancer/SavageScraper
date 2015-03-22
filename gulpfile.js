@@ -1,6 +1,7 @@
 // modules
 var gulp        = require('gulp');
 var babel       = require('gulp-babel');
+var mergeStream = require('merge-stream');
 
 var path        = require('path');
 var del         = require('del');
@@ -11,11 +12,13 @@ var mocha       = require('gulp-mocha');
 var espower     = require('gulp-espower');
 
 var browserSync = require('browser-sync');
+var reload      = browserSync.reload;
 var stubcell    = require('gulp-stubcell');
 var fs          = require('fs');
 var browserify  = require('browserify');
 var source      = require('vinyl-source-stream');
 var babelify    = require('babelify');
+var concat      = require('gulp-concat');
 
 
 // server
@@ -64,7 +67,9 @@ gulp.task('scripts:front', function(){
     debug: true,
     extensions: ['.js', '.jsx']
   })
-    .transform('babelify')
+    .transform(babelify.configure({
+      compact: false
+    }))
     .require('./app/front/scripts/app.js', { entry: true })
     .bundle()
     .on('error', function(err){ console.log(chalk.red("Error : " + err.message)); })
@@ -72,17 +77,23 @@ gulp.task('scripts:front', function(){
     .pipe(gulp.dest('dist/htdocs/scripts'));
 });
 
-gulp.task('static:index', function(){
-  return gulp.src('./app/front/index.html')
+gulp.task('static', function() {
+  var index = gulp.src('./app/front/index.html')
     .pipe(gulp.dest('dist/htdocs'));
-});
 
-gulp.task('static', ['static:index'], function() {
-  return gulp.src(staticPaths)
+  var others = gulp.src(staticPaths)
     .pipe(gulp.dest('dist/htdocs/static'));
+
+  return mergeStream(index, others);
 });
 
-gulp.task('build', ['clean', 'scripts:server', 'scripts:front', 'static']);
+gulp.task('css:vendor', function(){
+  return gulp.src([
+    './app/vendor/bootstrap/dist/css/bootstrap.min.css'
+  ])
+    .pipe(concat('vendor.css'))
+    .pipe(gulp.dest('dist/htdocs/styles'))
+});
 
 gulp.task('server', function(cb){
   gulp.watch(scriptsPaths.server, function(){
@@ -101,8 +112,14 @@ gulp.task('server', function(cb){
   startServer(cb);
 });
 
+gulp.task('watch:front', function(){
+  gulp.watch(scriptsPaths.front, ['scripts:front', reload]);
+  gulp.watch('app/front/index.html', ['static', reload]);
+});
+
 gulp.task('server:front', function(){
   browserSync({
+    open: false,
     server: {
       baseDir: './dist/htdocs/',
       directory: true
@@ -113,13 +130,32 @@ gulp.task('server:front', function(){
     entry: 'app/apimock/entry.yml',
     port: 3002
   });
-
-  gulp.watch(scriptsPaths.front, ['scripts:front', browserSync.reload]);
-  gulp.watch('app/front/index.html', ['static', browserSync.reload]);
 });
 
+gulp.task('build', [
+  'clean',
+  'scripts:server',
+  'scripts:front',
+  'css:vendor',
+  'static',
+  'static'
+]);
+
+gulp.task('build:server', [
+  'clean',
+  'scripts:server',
+  'static'
+]);
+
+gulp.task('build:front', [
+  'clean',
+  'scripts:front',
+  'css:vendor',
+  'static'
+]);
+
+gulp.task('front',   ['build', 'server:front', 'watch:front'])
 gulp.task('default', ['build', 'server']);
-gulp.task('front',   ['build', 'server:front'])
 
 
 function startServer(){
