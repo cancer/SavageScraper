@@ -113,8 +113,8 @@ gulp.task('server', function(cb){
 });
 
 gulp.task('server:front', function(){
-  gulp.watch(scriptsPaths.front, ['scripts:front', reload]);
-  gulp.watch('app/front/index.html', ['static', reload]);
+  gulp.watch(scriptsPaths.front, ['scripts:front']);
+  gulp.watch('app/front/index.html', ['static']);
 
   browserSync({
     open: false,

@@ -6,8 +6,8 @@ export default class Tabs extends React.Component {
   render() {
     return (
       <ul className="nav nav-tabs nav-justified">
-        <li>フィールド一覧</li>
-        <li>検索</li>
+        <li role="presentation" className="active"><a href="">フィールド一覧</a></li>
+        <li role="presentation"><a href="">検索</a></li>
       </ul>
     );
   }
