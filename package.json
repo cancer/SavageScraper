@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "Savage scraping",
   "scripts": {
-    "start": "gulp",
+    "postinstall": "bower install",
+    "start": "gulp front",
+    "server": "gulp server",
     "test": "gulp test"
   },
   "repository": {
@@ -22,16 +24,21 @@
     "moment-isocalendar": "^0.1.0"
   },
   "devDependencies": {
+    "babelify": "^5.0.4",
+    "browser-sync": "^2.4.0",
+    "browserify": "^9.0.3",
     "chalk": "^0.5.1",
     "del": "^1.1.1",
     "gulp": "^3.8.11",
+    "gulp-babel": "^4.0.0",
     "gulp-espower": "^0.10.1",
     "gulp-express": "^0.1.7",
     "gulp-mocha": "^2.0.0",
+    "gulp-stubcell": "^0.7.0",
     "mocha": "^2.1.0",
     "power-assert": "^0.10.2",
-    "gulp-babel": "^4.0.0",
-    "gulp-express": "^0.1.7"
+    "reactify": "^1.1.0",
+    "vinyl-source-stream": "^1.1.0"
   },
   "directories": {
     "test": "specs/"
