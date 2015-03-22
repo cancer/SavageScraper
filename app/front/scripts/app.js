@@ -1,7 +1,6 @@
 'use strict';
 
-var path = require('path');
-var React = require('../../vendor/react/react.js');
+var React = require('../../vendor/react/react');
 
 React.render(
   React.createElement('h1', null, "Welcome to SavageScraper!!"),

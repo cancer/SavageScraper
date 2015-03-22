@@ -60,7 +60,10 @@ gulp.task('scripts:server', function() {
 });
 
 gulp.task('scripts:front', function(){
-  browserify({ debug: true })
+  browserify({
+    debug: true,
+    extensions: ['.js', '.jsx']
+  })
     .transform('babelify')
     .require('./app/front/scripts/app.js', { entry: true })
     .bundle()
