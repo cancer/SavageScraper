@@ -1,9 +1,17 @@
 'use strict';
 
 var React = require('../../vendor/react/react');
+var Header = require('./components/header');
+var Tabs = require('./components/tabs');
+var List = require('./components/list');
 
 React.render(
-  React.createElement('h1', null, "Welcome to SavageScraper!!"),
+  <div>
+    <Header>SavageScraper</Header>
+    <Tabs />
+    <List />
+  </div>
+  ,
   document.getElementById('app')
 );
 
