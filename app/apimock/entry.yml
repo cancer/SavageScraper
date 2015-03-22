@@ -1,0 +1,8 @@
+-
+  request:
+    url: /api/
+    method: GET
+  response:
+    status: 200
+    file: json/_get.json
+
