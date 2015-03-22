@@ -1,12 +1,10 @@
 'use strict';
 
-var React = require('../../../vendor/react/react');
+import React from 'react';
 
-var Header = React.createClass({
+export default class Header extends React.Component {
   render() {
     return <div className="page-header">{this.props.children}</div>;
   }
-});
-
-module.exports = Header;
+}
 

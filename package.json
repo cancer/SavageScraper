@@ -21,7 +21,8 @@
     "html-entities": "^1.1.2",
     "lodash": "^3.2.0",
     "moment": "^2.9.0",
-    "moment-isocalendar": "^0.1.0"
+    "moment-isocalendar": "^0.1.0",
+    "react": "^0.13.1"
   },
   "devDependencies": {
     "babelify": "^5.0.4",

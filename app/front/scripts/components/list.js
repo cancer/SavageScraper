@@ -1,8 +1,8 @@
 'use strict';
 
-var React = require('../../../vendor/react/react');
+import React from 'react';
 
-var List = React.createClass({
+export default class List extends React.Component {
   render() {
     return (
       <table className="table">
@@ -37,6 +37,5 @@ var List = React.createClass({
       </table>
     );
   }
-});
+}
 
-module.exports = List;

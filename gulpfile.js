@@ -112,12 +112,10 @@ gulp.task('server', function(cb){
   startServer(cb);
 });
 
-gulp.task('watch:front', function(){
+gulp.task('server:front', function(){
   gulp.watch(scriptsPaths.front, ['scripts:front', reload]);
   gulp.watch('app/front/index.html', ['static', reload]);
-});
 
-gulp.task('server:front', function(){
   browserSync({
     open: false,
     server: {
@@ -154,7 +152,7 @@ gulp.task('build:front', [
   'static'
 ]);
 
-gulp.task('front',   ['build', 'server:front', 'watch:front'])
+gulp.task('front',   ['build', 'server:front']);
 gulp.task('default', ['build', 'server']);
 
 

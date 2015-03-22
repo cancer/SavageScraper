@@ -1,9 +1,11 @@
 'use strict';
 
-var React = require('../../vendor/react/react');
-var Header = require('./components/header');
-var Tabs = require('./components/tabs');
-var List = require('./components/list');
+import React  from 'react';
+import Header from './components/header';
+import Tabs   from './components/tabs';
+import List   from './components/list';
+
+var mountNode = document.getElementById('app');
 
 React.render(
   <div>
@@ -11,7 +13,6 @@ React.render(
     <Tabs />
     <List />
   </div>
-  ,
-  document.getElementById('app')
+  , mountNode
 );
 

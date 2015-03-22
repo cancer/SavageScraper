@@ -1,8 +1,8 @@
 'use strict';
 
-var React = require('../../../vendor/react/react');
+import React from 'react';
 
-var Tabs = React.createClass({
+export default class Tabs extends React.Component {
   render() {
     return (
       <ul className="nav nav-tabs nav-justified">
@@ -11,5 +11,5 @@ var Tabs = React.createClass({
       </ul>
     );
   }
-})
+}
 
