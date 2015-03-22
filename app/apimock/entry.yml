@@ -6,3 +6,11 @@
     status: 200
     file: json/_get.json
 
+-
+  request:
+    url: /api/fields
+    method: GET
+  response:
+    status: 200
+    file: json/fields/_get.json
+
