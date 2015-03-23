@@ -39,14 +39,15 @@ export default React.createClass({
     });
     return (
       <table className="table table-striped">
-        <colgroup>
-          <col width="60" />
-        </colgroup>
-        <tr>
-          <th>Name</th>
-          <th>Address</th>
-        </tr>
-        {{fields}}
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          {fields}
+        </tbody>
       </table>
     );
   }
