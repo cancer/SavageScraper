@@ -1,0 +1,32 @@
+{
+  "contents": [
+    {
+      "name": "デザートユニオン",
+      "name_en": "desert_union"
+    },
+    {
+      "name": "フォレストユニオン",
+      "name_en": "forest_union"
+    },
+    {
+      "name": "バトルシティ",
+      "name_en": "battlecity"
+    },
+    {
+      "name": "どんぱち",
+      "name_en": "donpachi"
+    },
+    {
+      "name": "No.9",
+      "name_en": "no9"
+    },
+    {
+      "name": "RAID",
+      "name_en": "raid"
+    },
+    {
+      "name": "Rock Hill",
+      "name_en": "rockhill"
+    }
+  ]
+}

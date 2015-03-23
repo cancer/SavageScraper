@@ -1,4 +1,11 @@
 {
-  "fieldsAPI": "/api/fields"
+  "/api/fields/:year/:month": {
+    "method": "GET",
+    "description": "フィールド一覧を返す.年月を指定した場合その年月で空きがあるフィールド一覧を返す"
+  },
+  "/api/field/:field/:year/:month": {
+    "method": "GET",
+    "description": "フィールド情報を返す.年月を指定した場合その年月の予約状況を加えて返す"
+  }
 }
 
