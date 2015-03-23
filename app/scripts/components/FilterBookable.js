@@ -2,7 +2,9 @@
 
 import React from 'react';
 
-export default class ShowBookable extends React.Component {
+export default React.createClass({
+  displayName: 'ShowBookable',
+
   render() {
     return(
       <div className="checkbox">
@@ -13,5 +15,5 @@ export default class ShowBookable extends React.Component {
       </div>
     );
   }
-}
+});
 

@@ -2,7 +2,9 @@
 
 import React from 'react';
 
-export default class Tabs extends React.Component {
+export default React.createClass({
+  displayName: 'Tabs',
+
   render() {
     return (
       <ul className="nav nav-tabs nav-justified">
@@ -11,5 +13,5 @@ export default class Tabs extends React.Component {
       </ul>
     );
   }
-}
+});
 
