@@ -1,12 +1,27 @@
 'use strict';
 
-import React          from 'react';
-import Header         from './Header';
-import Tabs           from './Tabs';
-import List           from './List';
-import FilterBookable from './FilterBookable';
+import React                 from 'react';
+import Header                from './Header';
+import Tabs                  from './Tabs';
+import List                  from './List';
+import FilterBookable        from './FilterBookable';
+import FieldsStore           from '../stores/FieldsStore';
+import FieldsActionCreators  from '../actions/FieldsActionCreators.js'
 
 export default class Fields extends React.Component {
+  componentDidMount() {
+    FieldsActionCreators.fetchAllFields();
+    FieldsStore.addChangeListener(this.onChange);
+  }
+
+  componentWillUnMount() {
+    FieldsStore.removeChangeListener(this.onChange);
+  }
+
+  onChange() {
+    this.setState({ fields: FieldsStore.getAll() });
+  }
+
   render() {
     return (
       <div>
