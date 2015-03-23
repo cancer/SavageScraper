@@ -18,7 +18,7 @@ export default React.createClass({
           <div id="app">
             <RouteHandler />
           </div>
-          <script src="/scripts/bundle.js"></script>
+          <script src="/scripts/browser.js"></script>
         </body>
       </html>
     );

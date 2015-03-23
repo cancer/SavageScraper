@@ -68,7 +68,7 @@ var browserifyConfig = {
   extensions: ['.js', '.jsx']
 };
 
-gulp.task('scripts', function(){
+gulp.task('scripts:old', function(){
   var babeled = gulp.src(scriptsPaths)
     .pipe(plumber())
     .pipe(babel())
@@ -83,6 +83,22 @@ gulp.task('scripts', function(){
     .pipe(gulp.dest('dist/scripts'));
 
   return mergeStream(babeled, bundled);
+});
+
+gulp.task('scripts', function(){
+  var entries = [
+    'browser.js',
+    'server.js'
+  ];
+  entries.forEach(function(entry){
+    browserify(browserifyConfig)
+      .transform(babelify.configure({ compact: false }))
+      .require('./app/scripts/' + entry, { entry: true })
+      .bundle()
+      .on('error', function(err){ console.log(chalk.red("Error : " + err.message)); })
+      .pipe(source(entry))
+      .pipe(gulp.dest('dist/scripts'));
+  });
 });
 
 gulp.task('static', function() {
