@@ -2,10 +2,10 @@
 
 import React          from 'react';
 import {RouteHandler} from 'react-router';
-import Header         from './header';
-import Tabs           from './tabs';
-import List           from './list';
-import ShowBookable   from './show_bookable';
+import Header         from './Header';
+import Tabs           from './Tabs';
+import List           from './List';
+import ShowBookable   from './ShowBookable';
 
 export default class App extends React.Component {
   render() {
