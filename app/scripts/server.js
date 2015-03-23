@@ -1,8 +1,23 @@
 'use strict';
 
-var express = require('express');
-var app = module.exports =  express();
-app.use(express.static(__dirname + '/htdocs/static'));
+import express from 'express';
+import React   from 'react';
+import Router  from 'react-router';
+import routes  from './routes';
+
+let app = express();
+app.use(express.static(__dirname + '/static'));
+
+app.use('/', (req, res) => {
+  Router.run(routes, req.path, (Handler) => {
+    res.send(React.renderToString(<Handler />));
+  });
+});
+
+app.get('/scripts/bundle.js', function(req, res) {
+  res.setHeader('Content-Type', 'application/javascript');
+  res.send(__dirname + '/scripts/bundle.js');
+});
 
 //
 // APIs

@@ -26,11 +26,20 @@ var concat      = require('gulp-concat');
 var service = null;
 
 
+// middleware
+var proxy  = require('proxy-middleware');
+var url    = require('url');
+var React  = require('react');
+var Router = require('react-router');
+var routes = require('./dist/scripts/routes');
+
+
 // paths
 var docroot = path.resolve(__dirname, '/dist');
 var scriptsPaths = './app/scripts/**/*.js';
 var serverScripts = [
   './app/scripts/server.js',
+  './app/scripts/routes.js',
   './app/scripts/server/**/*.js'
 ];
 var staticPaths = 'app/static/**/*';
@@ -64,7 +73,7 @@ var browserifyConfig = {
 };
 
 gulp.task('scripts:server', ['scripts:front'], function() {
-  return gulp.src(serverScripts)
+  return gulp.src(scriptsPaths)
     .pipe(babel())
     .pipe(gulp.dest('dist/scripts'));
 });
@@ -75,35 +84,23 @@ gulp.task('scripts:front', function(){
     .require('./app/scripts/browser.js', { entry: true })
     .bundle()
     .on('error', function(err){ console.log(chalk.red("Error : " + err.message)); })
-    .pipe(source('app.js'))
-    .pipe(gulp.dest('dist/htdocs/scripts'));
+    .pipe(source('bundle.js'))
+    .pipe(gulp.dest('dist/scripts'));
 });
 
 gulp.task('static', function() {
   var index = gulp.src('./app/template/index.html')
-    .pipe(gulp.dest('dist/htdocs'));
+    .pipe(gulp.dest('dist/static'));
 
   var others = gulp.src(staticPaths)
-    .pipe(gulp.dest('dist/htdocs/static'));
+    .pipe(gulp.dest('dist/static'));
 
   return mergeStream(index, others);
 });
 
-gulp.task('css:vendor', function(){
-  return gulp.src([
-    './app/vendor/bootstrap/dist/css/bootstrap.min.css'
-  ])
-    .pipe(concat('vendor.css'))
-    .pipe(gulp.dest('dist/htdocs/styles'))
-});
-
 gulp.task('server', function(cb){
-  gulp.watch(scriptsPaths.server, function(){
+  gulp.watch(scriptsPaths, function(){
     gulp.run('scripts:server');
-    startServer(cb);
-  });
-  gulp.watch(scriptsPaths.front, function(){
-    gulp.run('scripts:front');
     startServer(cb);
   });
   gulp.watch('app/static/**/*', function(){
@@ -121,9 +118,10 @@ gulp.task('server:front', function(){
   browserSync({
     open: false,
     server: {
-      baseDir: './dist/htdocs/',
-      directory: true
-    }
+      baseDir: './dist/',
+      middleware: bsMiddleware
+    },
+    ui: false
   });
 
   stubcell.start({
@@ -136,7 +134,6 @@ gulp.task('build', [
   'clean',
   'scripts:server',
   'scripts:front',
-  'css:vendor',
   'static'
 ]);
 
@@ -149,7 +146,6 @@ gulp.task('build:server', [
 gulp.task('build:front', [
   'clean',
   'scripts:front',
-  'css:vendor',
   'static'
 ]);
 
@@ -169,7 +165,7 @@ function startServer(){
     service = undefined;
     process.removeListener('exit', onProcessExit);
   }
-  service = spawn('node', ['dist/scripts/app.js']);
+  service = spawn('node', ['dist/scripts/server.js']);
   service.stdout.setEncoding('utf8');
   service.stderr.setEncoding('utf8');
   service.stdout.on('data', log);
@@ -185,6 +181,23 @@ function startServer(){
 
   function onProcessExit(){
     service.kill();
+  }
+}
+
+function bsMiddleware(req, res, next) {
+  if(req.url === '/scripts/bundle.js') {
+    res.setHeader('Content-Type', 'application/javascript');
+    next();
+  }
+  else if(req.url.indexOf('/api') !== -1) {
+    proxy(url.parse('http://localhost:3002/'))(req, res, next);
+  }
+  else {
+    res.setHeader('Content-Type', 'text/html');
+    Router.run(routes, req.path, function(Handler){
+      res.end(React.renderToString(React.createElement(Handler, null)));
+      next();
+    });
   }
 }
 
