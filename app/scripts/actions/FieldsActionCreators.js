@@ -8,11 +8,21 @@ let ActionTypes = FieldsConstants.ActionTypes;
 let apiRoot = '/api/';
 
 export default {
-  fetchAllFields: () => {
+  fetchAllFields() {
     request.get(`${apiRoot}fields/`)
       .then((res) => {
         AppDispatcher.dispatch({
-          actionType: ActionTypes.SHOW_FIELDS,
+          actionType: ActionTypes.FIELDS_SHOW_ALL,
+          fields: res.data.contents
+        });
+      });
+  },
+
+  fetchByMonth(year, month) {
+    request.get(`${apiRoot}fields/${year}/${month}`)
+      .then((res) => {
+        AppDispatcher.dispatch({
+          actionType: ActionTypes.FIELDS_SHOW_FILTERED_BY_MONTH,
           fields: res.data.contents
         });
       });

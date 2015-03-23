@@ -7,7 +7,9 @@ import AppConstants   from '../constants/AppConstants';
 
 let ActionTypes = AppConstants.ActionTypes;
 let CHANGE_EVENT = 'change';
+
 let fields = [];
+let showAll = false;
 
 var FieldsStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -24,14 +26,25 @@ var FieldsStore = assign({}, EventEmitter.prototype, {
 
   getAll() {
     return fields;
+  },
+
+  isShownAll() {
+    return showAll;
   }
 });
 
 AppDispatcher.register((action) => {
-
+  console.log(action.actionType)
   switch(action.actionType) {
-    case ActionTypes.SHOW_FIELDS:
+    case ActionTypes.FIELDS_SHOW_ALL:
       fields = action.fields;
+      showAll = true;
+      FieldsStore.emitChange();
+      break;
+
+    case ActionTypes.FIELDS_SHOW_FILTERED_BY_MONTH:
+      fields = action.fields;
+      showAll = false;
       FieldsStore.emitChange();
       break;
   }

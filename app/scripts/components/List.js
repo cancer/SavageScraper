@@ -1,31 +1,16 @@
 'use strict';
 
 import React       from 'react';
-import FieldsStore from '../stores/FieldsStore';
 
 export default React.createClass({
   displayName: 'List',
 
-  getInitialState() {
-    return {
-      fields: FieldsStore.getAll()
-    }
-  },
-
-  componentDidMount() {
-    FieldsStore.addChangeListener(this.onChange);
-  },
-
-  componentWillUnMount() {
-    FieldsStore.removeChangeListener(this.onChange);
-  },
-
-  onChange() {
-    this.setState({ fields: FieldsStore.getAll() });
+  propTypes: {
+    fields: React.PropTypes.array
   },
 
   render() {
-    let fields = this.state.fields.map((field, index) => {
+    let fields = this.props.fields.map((field, index) => {
       return (
         <tr>
           <td>
