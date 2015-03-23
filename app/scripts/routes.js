@@ -6,11 +6,11 @@ import Fields   from './components/Fields';
 import {
   Route,
   DefaultRoute
-}               from 'react-router';
+} from 'react-router';
 
 export default (
   <Route path="/" handler={App}>
-    <Route name="fields" handler={Fields} />
+    <Route handler={Fields} />
     <DefaultRoute handler={Fields} />
   </Route>
 )

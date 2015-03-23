@@ -13,7 +13,7 @@ export default {
       .then((res) => {
         AppDispatcher.dispatch({
           actionType: ActionTypes.SHOW_FIELDS,
-          fields: res.body
+          fields: res.data.contents
         });
       });
   }

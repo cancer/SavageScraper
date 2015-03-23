@@ -27,13 +27,12 @@ var FieldsStore = assign({}, EventEmitter.prototype, {
   }
 });
 
-AppDispatcher.register((payload) => {
-  let action = payload.action;
+AppDispatcher.register((action) => {
 
-  switch(action.type) {
+  switch(action.actionType) {
     case ActionTypes.SHOW_FIELDS:
       fields = action.fields;
-      FeildsStore.emitChange();
+      FieldsStore.emitChange();
       break;
   }
 });
