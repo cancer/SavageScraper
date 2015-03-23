@@ -1,5 +1,6 @@
 'use strict';
 
+import fs      from 'fs';
 import express from 'express';
 import React   from 'react';
 import Router  from 'react-router';
@@ -8,15 +9,15 @@ import routes  from './routes';
 let app = express();
 app.use(express.static(__dirname + '/static'));
 
-app.use('/', (req, res) => {
-  Router.run(routes, req.path, (Handler) => {
-    res.send(React.renderToString(<Handler />));
-  });
+app.get('/scripts/bundle.js', (req, res, next) => {
+  res.setHeader('Content-Type', 'application/javascript');
+  res.send(fs.readFileSync(__dirname + '/bundle.js'));
 });
 
-app.get('/scripts/bundle.js', function(req, res) {
-  res.setHeader('Content-Type', 'application/javascript');
-  res.send(__dirname + '/scripts/bundle.js');
+app.use((req, res) => {
+  Router.run(routes, req.path, (Handler) => {
+    res.send(React.renderToString(<Handler path="{req.path}" />));
+  });
 });
 
 //

@@ -30,7 +30,7 @@ export default class App extends React.Component {
             <RouteHandler />
           </div>
         </div>
-        <script src="scripts/bundle.js"></script>
+        <script src="/scripts/bundle.js"></script>
       </body>
       </html>
     );

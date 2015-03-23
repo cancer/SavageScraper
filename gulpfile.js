@@ -117,6 +117,7 @@ gulp.task('server:front', function(){
 
   browserSync({
     open: false,
+    port: 3000,
     server: {
       baseDir: './dist/',
       middleware: bsMiddleware
@@ -194,8 +195,12 @@ function bsMiddleware(req, res, next) {
   }
   else {
     res.setHeader('Content-Type', 'text/html');
-    Router.run(routes, req.path, function(Handler){
-      res.end(React.renderToString(React.createElement(Handler, null)));
+    Router.run(routes, req.url, function(Handler){
+      res.end(
+        React.renderToString(
+          React.createElement(Handler, { path: req.url })
+        )
+      );
       next();
     });
   }
