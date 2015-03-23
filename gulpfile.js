@@ -4,9 +4,10 @@ var babel       = require('gulp-babel');
 var mergeStream = require('merge-stream');
 var args        = require('yargs').argv;
 var plumber     = require('gulp-plumber');
+var runSequence = require('run-sequence');
 
 var path        = require('path');
-var del         = require('del');
+var rimraf      = require('rimraf');
 var spawn       = require('child_process').spawn;
 var chalk       = require('chalk');
 var server      = require('gulp-express');
@@ -31,7 +32,7 @@ var service = null;
 
 
 // paths
-var docroot = path.resolve(__dirname, '/dist');
+var docroot = __dirname + '/dist';
 var scriptsPaths = './app/scripts/**/*.js';
 var serverScripts = [
   './app/scripts/server.js',
@@ -59,8 +60,9 @@ gulp.task('test', ['build', 'power-assert'], function(){
     }));
 });
 
+
 gulp.task('clean', function(cb){
-  del(docroot, { force: true }, cb)
+  rimraf(docroot, cb);
 });
 
 var browserifyConfig = {
