@@ -36,6 +36,7 @@
     "gulp-espower": "^0.10.1",
     "gulp-express": "^0.1.7",
     "gulp-mocha": "^2.0.0",
+    "gulp-plumber": "^1.0.0",
     "gulp-stubcell": "^0.7.0",
     "merge-stream": "^0.1.7",
     "mocha": "^2.1.0",

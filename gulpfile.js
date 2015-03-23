@@ -3,6 +3,7 @@ var gulp        = require('gulp');
 var babel       = require('gulp-babel');
 var mergeStream = require('merge-stream');
 var args        = require('yargs').argv;
+var plumber     = require('gulp-plumber');
 
 var path        = require('path');
 var del         = require('del');
@@ -66,6 +67,7 @@ var browserifyConfig = {
 
 gulp.task('scripts', function(){
   var babeled = gulp.src(scriptsPaths)
+    .pipe(plumber())
     .pipe(babel())
     .pipe(gulp.dest('dist/scripts'));
 
