@@ -4,7 +4,7 @@ import React                 from 'react';
 import Header                from './Header';
 import Tabs                  from './Tabs';
 import List                  from './List';
-import FieldsToggleFilter    from './FieldsToggleFilter';
+import InputMonth            from './InputMonth';
 import FieldsStore           from '../stores/FieldsStore';
 
 export default React.createClass({
@@ -13,7 +13,7 @@ export default React.createClass({
   getInitialState() {
     return {
       fields:     FieldsStore.getAll(),
-      isShownAll: FieldsStore.isShownAll()
+      month:      FieldsStore.getFilteredMonth()
     }
   },
 
@@ -28,17 +28,19 @@ export default React.createClass({
   onChange() {
     this.setState({
       fields:     FieldsStore.getAll(),
-      isShownAll: FieldsStore.isShownAll()
+      month:      FieldsStore.getFilteredMonth()
     });
-    console.log(FieldsStore.isShownAll())
   },
 
   render() {
-    let style = {
-      panel: {
-        margin: '10px'
-      }
-    };
+    let panelHead;
+    if(this.state.month) {
+      panelHead = <div className="panel-heading">{this.state.month} に予約可能なフィールド一覧</div>;
+    }
+    else {
+      panelHead = <div className="panel-heading">フィールド一覧</div>;
+    }
+
     return (
       <div>
         <Header>SavageScraper</Header>
@@ -46,10 +48,9 @@ export default React.createClass({
         <div className="row">
           <div className="col-md-10 col-md-push-1">
             <div className="panel panel-default">
-              <div className="panel-heading">フィールド一覧</div>
+              {panelHead}
               <div className="panel-body">
-                <p>2015/3の予約状況</p>
-                <FieldsToggleFilter isShownAll={this.state.isShownAll} />
+                <InputMonth />
               </div>
               <List fields={this.state.fields} />
             </div>

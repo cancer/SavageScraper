@@ -10,6 +10,7 @@ let CHANGE_EVENT = 'change';
 
 let fields = [];
 let showAll = false;
+let selectMonth = null;
 
 var FieldsStore = assign({}, EventEmitter.prototype, {
   emitChange() {
@@ -28,23 +29,22 @@ var FieldsStore = assign({}, EventEmitter.prototype, {
     return fields;
   },
 
-  isShownAll() {
-    return showAll;
+  getFilteredMonth() {
+    return selectMonth;
   }
 });
 
 AppDispatcher.register((action) => {
-  console.log(action.actionType)
   switch(action.actionType) {
     case ActionTypes.FIELDS_SHOW_ALL:
       fields = action.fields;
-      showAll = true;
+      selectMonth = null;
       FieldsStore.emitChange();
       break;
 
     case ActionTypes.FIELDS_SHOW_FILTERED_BY_MONTH:
       fields = action.fields;
-      showAll = false;
+      selectMonth = action.selectMonth;
       FieldsStore.emitChange();
       break;
   }

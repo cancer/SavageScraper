@@ -2,15 +2,18 @@
   "contents": [
     {
       "name": "デザートユニオン",
-      "name_en": "desert_union"
+      "name_en": "desert_union",
+      "location": "千葉県印西市平賀2853"
     },
     {
       "name": "No.9",
-      "name_en": "no9"
+      "name_en": "no9",
+      "location": "千葉県印西市岩戸2506-1"
     },
     {
       "name": "バトルシティ",
-      "name_en": "battlecity"
+      "name_en": "battlecity",
+      "location": "千葉県佐倉市 上別所377番1"
     }
   ]
 }

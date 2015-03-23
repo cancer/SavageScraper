@@ -23,7 +23,8 @@ export default {
       .then((res) => {
         AppDispatcher.dispatch({
           actionType: ActionTypes.FIELDS_SHOW_FILTERED_BY_MONTH,
-          fields: res.data.contents
+          fields: res.data.contents,
+          selectMonth: `${year}/${month}`
         });
       });
   }
