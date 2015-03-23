@@ -70,27 +70,9 @@ var browserifyConfig = {
   extensions: ['.js', '.jsx']
 };
 
-gulp.task('scripts:old', function(){
-  var babeled = gulp.src(scriptsPaths)
-    .pipe(plumber())
-    .pipe(babel())
-    .pipe(gulp.dest('dist/scripts'));
-
-  var bundled = browserify(browserifyConfig)
-    .transform(babelify.configure({ compact: false }))
-    .require('./dist/scripts/browser.js', { entry: true })
-    .bundle()
-    .on('error', function(err){ console.log(chalk.red("Error : " + err.message)); })
-    .pipe(source('bundle.js'))
-    .pipe(gulp.dest('dist/scripts'));
-
-  return mergeStream(babeled, bundled);
-});
-
-gulp.task('scripts', function(){
+gulp.task('scripts:browserify', function(){
   var entries = [
-    'browser.js',
-    'server.js'
+    'browser.js'
   ];
   entries.forEach(function(entry){
     browserify(browserifyConfig)
@@ -102,6 +84,20 @@ gulp.task('scripts', function(){
       .pipe(gulp.dest('dist/scripts'));
   });
 });
+
+gulp.task('scripts:babel', function(){
+  var files = [ scriptsPaths ];
+
+  if(!args.server) {
+    files.push('!./app/scripts/server/**/*');
+  }
+
+  return gulp.src(files)
+    .pipe(babel())
+    .pipe(gulp.dest('dist/scripts'));
+})
+
+gulp.task('scripts', ['scripts:babel', 'scripts:browserify']);
 
 gulp.task('static', function() {
   var index = gulp.src('./app/template/index.html')
@@ -126,21 +122,27 @@ gulp.task('server', function(cb){
   startServer(cb);
 });
 
-gulp.task('server:front', function(){
+gulp.task('server:front', ['build'], function(){
   gulp.watch(scriptsPaths, ['scripts']);
   gulp.watch('app/template/index.html', ['static']);
+
+  stubcell.start({
+    entry: 'app/apimock/entry.yml',
+    port: 3002
+  });
 
   connect.server({
     port: 3000,
     root: './dist/',
     middleware: function(connect) {
       var mock = connect();
+      var browserJS = '/scripts/browser.js';
 
       return [
         mock.use('/api', proxy(url.parse('http://localhost:3002/api'))),
-        mock.use('/scripts/bundle.js', function(req, res){
+        mock.use(browserJS, function(req, res){
           res.setHeader('Content-Type', 'application/javascript');
-          fs.readFile(__dirname + '/dist/scripts/bundle.js', function(err, data){
+          fs.readFile(__dirname + '/dist' + browserJS, function(err, data){
             if(err) throw err;
             res.end(data);
           });
@@ -162,20 +164,13 @@ gulp.task('server:front', function(){
       ];
     }
   });
-
-  stubcell.start({
-    entry: 'app/apimock/entry.yml',
-    port: 3002
-  });
 });
 
-gulp.task('build', [
-  'clean',
-  'scripts',
-  'static'
-]);
+gulp.task('build', function(cb){
+  runSequence('clean', ['static', 'scripts'], cb);
+});
 
-gulp.task('default', ['build'], function(){
+gulp.task('default', function(){
   if(args.server) {
     gulp.run('server')
   }
