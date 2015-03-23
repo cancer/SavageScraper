@@ -2,10 +2,6 @@
 
 import React          from 'react';
 import {RouteHandler} from 'react-router';
-import Header         from './Header';
-import Tabs           from './Tabs';
-import List           from './List';
-import ShowBookable   from './ShowBookable';
 
 export default class App extends React.Component {
   render() {
@@ -18,17 +14,7 @@ export default class App extends React.Component {
       </head>
       <body>
         <div id="app">
-          <Header>SavageScraper</Header>
-          <!--Tabs /-->
-          <div className="panel panel-default">
-            <div className="panel-heading">フィールド一覧</div>
-            <div className="panel-body">
-              <p>2015/3の予約状況</p>
-              <ShowBookable />
-            </div>
-            <List />
-            <RouteHandler />
-          </div>
+          <RouteHandler />
         </div>
         <script src="/scripts/bundle.js"></script>
       </body>
