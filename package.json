@@ -4,8 +4,8 @@
   "description": "Savage scraping",
   "scripts": {
     "postinstall": "bower install",
-    "start": "gulp front",
-    "server": "gulp server",
+    "start": "gulp",
+    "server": "gulp --server",
     "test": "gulp test"
   },
   "repository": {
