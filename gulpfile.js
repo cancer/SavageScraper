@@ -64,20 +64,20 @@ var browserifyConfig = {
   extensions: ['.js', '.jsx']
 };
 
-gulp.task('scripts:server', ['scripts:front'], function() {
-  return gulp.src(scriptsPaths)
+gulp.task('scripts', function(){
+  var babeled = gulp.src(scriptsPaths)
     .pipe(babel())
     .pipe(gulp.dest('dist/scripts'));
-});
 
-gulp.task('scripts:front', function(){
-  browserify(browserifyConfig)
+  var bundled = browserify(browserifyConfig)
     .transform(babelify.configure({ compact: false }))
-    .require('./app/scripts/browser.js', { entry: true })
+    .require('./dist/scripts/browser.js', { entry: true })
     .bundle()
     .on('error', function(err){ console.log(chalk.red("Error : " + err.message)); })
     .pipe(source('bundle.js'))
     .pipe(gulp.dest('dist/scripts'));
+
+  return mergeStream(babeled, bundled);
 });
 
 gulp.task('static', function() {
@@ -92,7 +92,7 @@ gulp.task('static', function() {
 
 gulp.task('server', function(cb){
   gulp.watch(scriptsPaths, function(){
-    gulp.run('scripts:server');
+    gulp.run('scripts');
     startServer(cb);
   });
   gulp.watch('app/static/**/*', function(){
@@ -104,7 +104,7 @@ gulp.task('server', function(cb){
 });
 
 gulp.task('server:front', function(){
-  gulp.watch(scriptsPaths, ['scripts:front']);
+  gulp.watch(scriptsPaths, ['scripts']);
   gulp.watch('app/template/index.html', ['static']);
 
   browserSync({
@@ -125,20 +125,7 @@ gulp.task('server:front', function(){
 
 gulp.task('build', [
   'clean',
-  'scripts:server',
-  'scripts:front',
-  'static'
-]);
-
-gulp.task('build:server', [
-  'clean',
-  'scripts:server',
-  'static'
-]);
-
-gulp.task('build:front', [
-  'clean',
-  'scripts:front',
+  'scripts',
   'static'
 ]);
 
