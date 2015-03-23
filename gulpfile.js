@@ -26,14 +26,6 @@ var concat      = require('gulp-concat');
 var service = null;
 
 
-// middleware
-var proxy  = require('proxy-middleware');
-var url    = require('url');
-var React  = require('react');
-var Router = require('react-router');
-var routes = require('./dist/scripts/routes');
-
-
 // paths
 var docroot = path.resolve(__dirname, '/dist');
 var scriptsPaths = './app/scripts/**/*.js';
@@ -186,6 +178,12 @@ function startServer(){
 }
 
 function bsMiddleware(req, res, next) {
+  var proxy  = require('proxy-middleware');
+  var url    = require('url');
+  var React  = require('react');
+  var Router = require('react-router');
+  var routes = require('./dist/scripts/routes');
+
   if(req.url === '/scripts/bundle.js') {
     res.setHeader('Content-Type', 'application/javascript');
     next();
