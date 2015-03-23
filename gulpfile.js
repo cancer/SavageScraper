@@ -2,6 +2,7 @@
 var gulp        = require('gulp');
 var babel       = require('gulp-babel');
 var mergeStream = require('merge-stream');
+var args        = require('yargs').argv;
 
 var path        = require('path');
 var del         = require('del');
@@ -27,11 +28,12 @@ var service = null;
 
 // paths
 var docroot = path.resolve(__dirname, '/dist');
-var scriptsPaths = {
-  server: ['./app/server/**/*.js'],
-  front:  ['./app/front/scripts/**/*.js']
-};
-var staticPaths = ['app/static/**/*'];
+var scriptsPaths = './app/scripts/**/*.js';
+var serverScripts = [
+  './app/scripts/server.js',
+  './app/scripts/server/**/*.js'
+];
+var staticPaths = 'app/static/**/*';
 var specPath = 'specs/**/*.js';
 var poweredPath = 'powered/**/*.js';
 var poweredDest = 'powered/';
@@ -54,23 +56,23 @@ gulp.task('test', ['build', 'power-assert'], function(){
 
 gulp.task('clean', function(cb){
   del(docroot, { force: true }, cb)
-})
+});
 
-gulp.task('scripts:server', function() {
-  return gulp.src(scriptsPaths.server)
+var browserifyConfig = {
+  debug: true,
+  extensions: ['.js', '.jsx']
+};
+
+gulp.task('scripts:server', ['scripts:front'], function() {
+  return gulp.src(serverScripts)
     .pipe(babel())
     .pipe(gulp.dest('dist/scripts'));
 });
 
 gulp.task('scripts:front', function(){
-  browserify({
-    debug: true,
-    extensions: ['.js', '.jsx']
-  })
-    .transform(babelify.configure({
-      compact: false
-    }))
-    .require('./app/front/scripts/app.js', { entry: true })
+  browserify(browserifyConfig)
+    .transform(babelify.configure({ compact: false }))
+    .require('./app/scripts/browser.js', { entry: true })
     .bundle()
     .on('error', function(err){ console.log(chalk.red("Error : " + err.message)); })
     .pipe(source('app.js'))
@@ -78,7 +80,7 @@ gulp.task('scripts:front', function(){
 });
 
 gulp.task('static', function() {
-  var index = gulp.src('./app/front/index.html')
+  var index = gulp.src('./app/template/index.html')
     .pipe(gulp.dest('dist/htdocs'));
 
   var others = gulp.src(staticPaths)
@@ -113,8 +115,8 @@ gulp.task('server', function(cb){
 });
 
 gulp.task('server:front', function(){
-  gulp.watch(scriptsPaths.front, ['scripts:front']);
-  gulp.watch('app/front/index.html', ['static']);
+  gulp.watch(scriptsPaths, ['scripts:front']);
+  gulp.watch('app/template/index.html', ['static']);
 
   browserSync({
     open: false,
@@ -135,7 +137,6 @@ gulp.task('build', [
   'scripts:server',
   'scripts:front',
   'css:vendor',
-  'static',
   'static'
 ]);
 
@@ -152,8 +153,14 @@ gulp.task('build:front', [
   'static'
 ]);
 
-gulp.task('front',   ['build', 'server:front']);
-gulp.task('default', ['build', 'server']);
+gulp.task('default', ['build'], function(){
+  if(args.server) {
+    gulp.run('server')
+  }
+  else {
+    gulp.run('server:front')
+  }
+});
 
 
 function startServer(){

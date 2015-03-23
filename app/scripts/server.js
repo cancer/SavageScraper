@@ -2,7 +2,11 @@
 
 var express = require('express');
 var app = module.exports =  express();
-app.use(express.static(__dirname + '/static'));
+app.use(express.static(__dirname + '/htdocs/static'));
+
+//
+// APIs
+//
 
 // Union traditional
 app.get('/desert_union/:year/:month', require('./modules/api/desert_union'));

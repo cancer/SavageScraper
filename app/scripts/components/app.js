@@ -1,10 +1,10 @@
 'use strict';
 
 import React        from 'react';
-import Header       from './components/header';
-import Tabs         from './components/tabs';
-import List         from './components/list';
-import ShowBookable from './components/show_bookable';
+import Header       from './header';
+import Tabs         from './tabs';
+import List         from './list';
+import ShowBookable from './show_bookable';
 
 var mountNode = document.getElementById('app');
 
