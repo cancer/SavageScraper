@@ -3,9 +3,11 @@ var gulp        = require('gulp');
 var babel       = require('gulp-babel');
 var mergeStream = require('merge-stream');
 var args        = require('yargs').argv;
+var plumber     = require('gulp-plumber');
+var runSequence = require('run-sequence');
 
 var path        = require('path');
-var del         = require('del');
+var rimraf      = require('rimraf');
 var spawn       = require('child_process').spawn;
 var chalk       = require('chalk');
 var server      = require('gulp-express');
@@ -14,6 +16,9 @@ var espower     = require('gulp-espower');
 
 var browserSync = require('browser-sync');
 var reload      = browserSync.reload;
+var connect     = require('gulp-connect');
+var proxy       = require('proxy-middleware');
+var url         = require('url');
 var stubcell    = require('gulp-stubcell');
 var fs          = require('fs');
 var browserify  = require('browserify');
@@ -27,7 +32,7 @@ var service = null;
 
 
 // paths
-var docroot = path.resolve(__dirname, '/dist');
+var docroot = __dirname + '/dist';
 var scriptsPaths = './app/scripts/**/*.js';
 var serverScripts = [
   './app/scripts/server.js',
@@ -55,8 +60,9 @@ gulp.task('test', ['build', 'power-assert'], function(){
     }));
 });
 
+
 gulp.task('clean', function(cb){
-  del(docroot, { force: true }, cb)
+  rimraf(docroot, cb);
 });
 
 var browserifyConfig = {
@@ -64,21 +70,34 @@ var browserifyConfig = {
   extensions: ['.js', '.jsx']
 };
 
-gulp.task('scripts:server', ['scripts:front'], function() {
-  return gulp.src(scriptsPaths)
-    .pipe(babel())
-    .pipe(gulp.dest('dist/scripts'));
+gulp.task('scripts:browserify', function(){
+  var entries = [
+    'browser.js'
+  ];
+  entries.forEach(function(entry){
+    browserify(browserifyConfig)
+      .transform(babelify.configure({ compact: false }))
+      .require('./app/scripts/' + entry, { entry: true })
+      .bundle()
+      .on('error', function(err){ console.log(chalk.red("Error : " + err.message)); })
+      .pipe(source(entry))
+      .pipe(gulp.dest('dist/scripts'));
+  });
 });
 
-gulp.task('scripts:front', function(){
-  browserify(browserifyConfig)
-    .transform(babelify.configure({ compact: false }))
-    .require('./app/scripts/browser.js', { entry: true })
-    .bundle()
-    .on('error', function(err){ console.log(chalk.red("Error : " + err.message)); })
-    .pipe(source('bundle.js'))
+gulp.task('scripts:babel', function(){
+  var files = [ scriptsPaths ];
+
+  if(!args.server) {
+    files.push('!./app/scripts/server/**/*');
+  }
+
+  return gulp.src(files)
+    .pipe(babel())
     .pipe(gulp.dest('dist/scripts'));
-});
+})
+
+gulp.task('scripts', ['scripts:babel', 'scripts:browserify']);
 
 gulp.task('static', function() {
   var index = gulp.src('./app/template/index.html')
@@ -92,7 +111,7 @@ gulp.task('static', function() {
 
 gulp.task('server', function(cb){
   gulp.watch(scriptsPaths, function(){
-    gulp.run('scripts:server');
+    gulp.run('scripts');
     startServer(cb);
   });
   gulp.watch('app/static/**/*', function(){
@@ -103,46 +122,55 @@ gulp.task('server', function(cb){
   startServer(cb);
 });
 
-gulp.task('server:front', function(){
-  gulp.watch(scriptsPaths, ['scripts:front']);
+gulp.task('server:front', ['build'], function(){
+  gulp.watch(scriptsPaths, ['scripts']);
   gulp.watch('app/template/index.html', ['static']);
-
-  browserSync({
-    open: false,
-    port: 3000,
-    server: {
-      baseDir: './dist/',
-      middleware: bsMiddleware
-    },
-    ui: false
-  });
 
   stubcell.start({
     entry: 'app/apimock/entry.yml',
     port: 3002
   });
+
+  connect.server({
+    port: 3000,
+    root: './dist/',
+    middleware: function(connect) {
+      var mock = connect();
+      var browserJS = '/scripts/browser.js';
+
+      return [
+        mock.use('/api', proxy(url.parse('http://localhost:3002/api'))),
+        mock.use(browserJS, function(req, res){
+          res.setHeader('Content-Type', 'application/javascript');
+          fs.readFile(__dirname + '/dist' + browserJS, function(err, data){
+            if(err) throw err;
+            res.end(data);
+          });
+        }),
+        mock.use('/', function(req, res, next) {
+          var React  = require('react');
+          var Router = require('react-router');
+          var routes = require('./dist/scripts/routes');
+
+          res.setHeader('Content-Type', 'text/html');
+          Router.run(routes, req.url, function(Handler){
+            res.end(
+              React.renderToString(
+                React.createElement(Handler, { path: req.url })
+              )
+            );
+          });
+        })
+      ];
+    }
+  });
 });
 
-gulp.task('build', [
-  'clean',
-  'scripts:server',
-  'scripts:front',
-  'static'
-]);
+gulp.task('build', function(cb){
+  runSequence('clean', ['static', 'scripts'], cb);
+});
 
-gulp.task('build:server', [
-  'clean',
-  'scripts:server',
-  'static'
-]);
-
-gulp.task('build:front', [
-  'clean',
-  'scripts:front',
-  'static'
-]);
-
-gulp.task('default', ['build'], function(){
+gulp.task('default', function(){
   if(args.server) {
     gulp.run('server')
   }
@@ -178,8 +206,6 @@ function startServer(){
 }
 
 function bsMiddleware(req, res, next) {
-  var proxy  = require('proxy-middleware');
-  var url    = require('url');
   var React  = require('react');
   var Router = require('react-router');
   var routes = require('./dist/scripts/routes');

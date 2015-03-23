@@ -2,7 +2,9 @@
 
 import React from 'react';
 
-export default class Header extends React.Component {
+export default React.createClass({
+  displayName: 'Header',
+
   render() {
     return (
       <div className="navbar navbar-default">
@@ -14,5 +16,5 @@ export default class Header extends React.Component {
       </div>
     );
   }
-}
+});
 
