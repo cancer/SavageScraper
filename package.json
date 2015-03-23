@@ -40,8 +40,11 @@
     "merge-stream": "^0.1.7",
     "mocha": "^2.1.0",
     "power-assert": "^0.10.2",
+    "proxy-middleware": "^0.11.0",
     "reactify": "^1.1.0",
-    "vinyl-source-stream": "^1.1.0"
+    "url": "^0.10.3",
+    "vinyl-source-stream": "^1.1.0",
+    "yargs": "^3.6.0"
   },
   "directories": {
     "test": "specs/"
