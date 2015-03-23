@@ -21,7 +21,8 @@
     "html-entities": "^1.1.2",
     "lodash": "^3.2.0",
     "moment": "^2.9.0",
-    "moment-isocalendar": "^0.1.0"
+    "moment-isocalendar": "^0.1.0",
+    "react": "^0.13.1"
   },
   "devDependencies": {
     "babelify": "^5.0.4",
@@ -31,10 +32,12 @@
     "del": "^1.1.1",
     "gulp": "^3.8.11",
     "gulp-babel": "^4.0.0",
+    "gulp-concat": "^2.5.2",
     "gulp-espower": "^0.10.1",
     "gulp-express": "^0.1.7",
     "gulp-mocha": "^2.0.0",
     "gulp-stubcell": "^0.7.0",
+    "merge-stream": "^0.1.7",
     "mocha": "^2.1.0",
     "power-assert": "^0.10.2",
     "reactify": "^1.1.0",
