@@ -15,6 +15,9 @@ var espower     = require('gulp-espower');
 
 var browserSync = require('browser-sync');
 var reload      = browserSync.reload;
+var connect     = require('gulp-connect');
+var proxy       = require('proxy-middleware');
+var url         = require('url');
 var stubcell    = require('gulp-stubcell');
 var fs          = require('fs');
 var browserify  = require('browserify');
@@ -109,14 +112,37 @@ gulp.task('server:front', function(){
   gulp.watch(scriptsPaths, ['scripts']);
   gulp.watch('app/template/index.html', ['static']);
 
-  browserSync({
-    open: false,
+  connect.server({
     port: 3000,
-    server: {
-      baseDir: './dist/',
-      middleware: bsMiddleware
-    },
-    ui: false
+    root: './dist/',
+    middleware: function(connect) {
+      var mock = connect();
+
+      return [
+        mock.use('/api', proxy(url.parse('http://localhost:3002/api'))),
+        mock.use('/scripts/bundle.js', function(req, res){
+          res.setHeader('Content-Type', 'application/javascript');
+          fs.readFile(__dirname + '/dist/scripts/bundle.js', function(err, data){
+            if(err) throw err;
+            res.end(data);
+          });
+        }),
+        mock.use('/', function(req, res, next) {
+          var React  = require('react');
+          var Router = require('react-router');
+          var routes = require('./dist/scripts/routes');
+
+          res.setHeader('Content-Type', 'text/html');
+          Router.run(routes, req.url, function(Handler){
+            res.end(
+              React.renderToString(
+                React.createElement(Handler, { path: req.url })
+              )
+            );
+          });
+        })
+      ];
+    }
   });
 
   stubcell.start({
@@ -167,8 +193,6 @@ function startServer(){
 }
 
 function bsMiddleware(req, res, next) {
-  var proxy  = require('proxy-middleware');
-  var url    = require('url');
   var React  = require('react');
   var Router = require('react-router');
   var routes = require('./dist/scripts/routes');
