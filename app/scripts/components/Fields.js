@@ -1,8 +1,6 @@
 'use strict';
 
 import React                 from 'react';
-import Header                from './Header';
-import Tabs                  from './Tabs';
 import List                  from './List';
 import InputMonth            from './InputMonth';
 import FieldsStore           from '../stores/FieldsStore';
@@ -42,20 +40,12 @@ export default React.createClass({
     }
 
     return (
-      <div>
-        <Header>SavageScraper</Header>
-        <!--Tabs /-->
-        <div className="row">
-          <div className="col-md-10 col-md-push-1">
-            <div className="panel panel-default">
-              {panelHead}
-              <div className="panel-body">
-                <InputMonth />
-              </div>
-              <List fields={this.state.fields} />
-            </div>
-          </div>
+      <div className="panel panel-default">
+        {panelHead}
+        <div className="panel-body">
+          <InputMonth />
         </div>
+        <List fields={this.state.fields} />
       </div>
     );
   }

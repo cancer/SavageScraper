@@ -3,6 +3,7 @@
     "name": "デザートユニオン",
     "name_en": "desert_union",
     "location": "千葉県印西市平賀2853",
-    "area": ["Aフィールド", "Bフィールド"]
+    "area": ["Aフィールド", "Bフィールド"],
+    "site": "http://desert-union.jp/"
   }
 }
