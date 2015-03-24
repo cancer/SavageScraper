@@ -1,8 +1,7 @@
 'use strict';
 
 import React          from 'react';
-import {RouteHandler} from 'react-router';
-import Header         from './Header';
+import {RouteHandler, Link} from 'react-router';
 import Tabs           from './Tabs';
 
 export default React.createClass({
@@ -18,7 +17,13 @@ export default React.createClass({
         </head>
         <body>
           <div id="app">
-            <Header>SavageScraper</Header>
+            <div className="navbar navbar-default">
+              <div className="container-fluid">
+                <div className="navbar-header">
+                  <Link to="app" className="navbar-brand">SavageScraper</Link>
+                </div>
+              </div>
+            </div>
             <!--Tabs /-->
             <div className="row">
               <div className="col-md-10 col-md-push-1">

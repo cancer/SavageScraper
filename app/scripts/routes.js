@@ -12,7 +12,7 @@ import {
 } from 'react-router';
 
 export default (
-  <Route path="/" handler={App}>
+  <Route name="app" path="/" handler={App}>
     <DefaultRoute handler={Fields} />
     <Route name="field-detail" path="/field/:field" handler={FieldDetail} />
     <NotFoundRoute handler={FieldNotFound} />
