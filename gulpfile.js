@@ -93,6 +93,7 @@ gulp.task('scripts:babel', function(){
   }
 
   return gulp.src(files)
+    .pipe(plumber())
     .pipe(babel())
     .pipe(gulp.dest('dist/scripts'));
 })

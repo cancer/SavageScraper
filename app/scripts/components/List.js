@@ -1,6 +1,7 @@
 'use strict';
 
 import React       from 'react';
+import {Link}      from 'react-router';
 
 export default React.createClass({
   displayName: 'List',
@@ -14,7 +15,7 @@ export default React.createClass({
       return (
         <tr>
           <td>
-            <a href="">{field.name}</a>
+            <Link to="field-detail" params={{field: field.name_en}}>{field.name}</Link>
           </td>
           <td>
             {field.location}
